@@ -1,0 +1,64 @@
+@model Instagram.ViewModels.UserVms.UserIndexVm
+
+@{
+    ViewBag.Title = ViewData["Main page"];
+    Layout = "_Layout";
+}
+
+@foreach (var user in Model.Subscribed)
+{
+    @foreach (var post in user.Posts)
+    {
+        <div class="card mb-3">
+            <div><a asp-action="OtherUserCabinet" 
+                    asp-controller="User"
+                    asp-route-id="@user.Id"><img src="@user.Avatar" width="70px" height="70px" class="rounded-circle" alt="user_avatar"></a></div>
+            <img src="~/@post.Image" class="card-img-top" alt="post_logo">
+            <div class="card-body">
+                <div class="d-flex">
+                    <a id="subscribe" class="pe-2" onclick="like('@post.Id')">
+                        @if (post.Likes.Any(like => like.User.Id == ViewBag.CurrentUser))
+                        {
+                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                        }
+                        else
+                        {
+                            <i class="fa-regular fa-heart"></i>
+                        }
+                    </a>
+                    <div><a href="#floatingTextarea" class="text-black"><i class="fa-regular fa-comment fa-flip-horizontal"></i></a></div>
+                </div>
+                <h5 class="card-title">@post.Likes.Count @ViewData["Likes"]</h5>
+                @foreach (var comment in post.Comments)
+                {
+                    <div>@comment.User.UserName @comment.Text</div>
+                }
+                <p class="card-text">@post.Description</p>
+                <form asp-action="Comment" asp-controller="User"
+                      method="post" asp-route-postId="@post.Id">
+                    <div class="form-floating mb-3">
+                      <div class="form-floating">
+                        <input class="form-control" name="commentText" placeholder="Leave a comment here" id="floatingTextarea">
+                      </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts
+{
+    <script>
+        function like(id){
+            $.ajax({
+                url: '@Url.Action("Like", "User")',
+                type: "POST",
+                data: {postId: id},
+                success: function (){
+                    location.reload();
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,75 @@
+@using Instagram.Util.Enums
+@using Instagram.Util.Services
+@model Instagram.ViewModels.UserVms.RegisterVm
+
+@{
+    ViewBag.Title = ViewData["Register"];
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-center">
+    <div class="card" style="width: 18rem;">
+        <div class="card-img-top text-center pt-3">
+            <img 
+                src="~/images/instagramLogo.png"
+                class="w-50 w-50"
+                alt="logo">
+        </div>
+        <div class="card-body d-flex justify-content-center">
+            <form asp-action="Register" method="post" asp-controller="Account" 
+                  enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div class="form-group">
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                    <input asp-for="UserName" class="form-control mb-2 text-muted" placeholder=@ViewData["Username"]>
+                </div>
+                <div class="form-group">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <input asp-for="Email" class="form-control my-2 text-muted" placeholder=@ViewData["Email"]>
+                </div>
+                <div class="form-group">
+                    <span asp-validation-for="Avatar" class="text-danger"></span>
+                    <input type="file" asp-for="Avatar" class="form-control my-2 text-muted">
+                </div>
+                <div class="form-group">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <input asp-for="Password" class="form-control my-2 text-muted" placeholder=@ViewData["Password"]>
+                </div>
+                <div class="form-group">
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    <input asp-for="ConfirmPassword" class="form-control my-2 text-muted" placeholder=@ViewData["Confirm"]>
+                </div>
+                <div class="form-group">
+                    <input asp-for="Name" class="form-control my-2 text-muted" placeholder=@ViewData["Name"]>
+                </div>
+                <div class="form-group">
+                    <textarea asp-for="Info" class="form-control my-2 text-muted" placeholder=@ViewData["Description"]></textarea>
+                </div>
+                <div class="form-group">
+                    <input asp-for="PhoneNumber" class="form-control my-2 text-muted" placeholder=@ViewData["Phone"]>
+                </div>
+                <select class="form-control" id="category" asp-for="Gender">
+                    <option selected="selected" value="Все">@ViewData["All"]</option>
+                    @foreach (Gender gender in ViewBag.GenderList)
+                    {
+                        <option value="@gender">@gender.GetDisplayName()</option>
+                    }
+                </select>
+                <input type="submit" class="btn btn-info w-100 mt-3 text-white" value=@ViewData["Register"]>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-center text-center mt-2">
+    <div class="card p-3" style="width: 18rem;">
+        <div class="card-text">
+            @ViewData["Have account?"] <a class="text-decoration-none" asp-action="Login" asp-controller="Account">@ViewData["Authorize"]</a>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

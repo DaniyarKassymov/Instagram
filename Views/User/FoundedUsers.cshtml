@@ -1,0 +1,28 @@
+@model System.Collections.Generic.List<Instagram.ViewModels.UserVms.PersonalCabinetVm>
+
+@{
+    ViewBag.Title = "Список пользователей";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-center">
+    <div>
+        @foreach (var user in Model)
+        {
+            <div class="d-flex">
+                <div>
+                    <img src="~/@user.Avatar" alt="user_avatar" 
+                         class="rounded-circle" width="100px" height="100px">
+                </div>
+                <div class="my-auto ps-3">
+                    <a asp-action="OtherUserCabinet" 
+                       asp-route-id="@user.Id" 
+                       asp-controller="User"
+                       class="text-decoration-none display-6 text-black">
+                        @user.UserName
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

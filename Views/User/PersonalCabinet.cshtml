@@ -1,0 +1,77 @@
+@model Instagram.ViewModels.UserVms.PersonalCabinetVm
+
+@{
+    ViewBag.Title = ViewData["Personal cabinet"];
+    Layout = "_Layout";
+}
+
+<div class="container" style="width: 960px;">
+    <div class="row justify-content-around">
+        <div class="col-4">
+            <img class="rounded-circle" style="width: 200px; height: 200px;" src="~/@Model.Avatar" alt="avatar">
+        </div>
+        <div class="col-7 pt-4">
+            <div class="row">
+                <div class="col-4">
+                    <h2>@Model.UserName</h2>
+                </div>
+                <div class="col-8">
+                    <form asp-controller="Account" asp-action="LogOut">
+                        <input type="submit" class="btn btn-outline-dark" value=@ViewData["LogOut"]>
+                    </form>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <div>@Model.Posts.Count :@ViewData["Posts"]</div>
+                <div>@Model.Subscribers.Count :@ViewData["Subscribers"]</div>
+                <div>@Model.Subscribed.Count :@ViewData["Subscriptions"]</div>
+            </div>
+            <div>
+                <h5>@Model.Name</h5>
+                <p>@Model.Info</p>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <a asp-action="Add" asp-controller="Post">
+            <img src="~/images/postAddLogo.png" width="25px" height="25px" alt="add_post_logo">
+        </a>
+    </div>
+    <div class="row d-flex mt-5">
+        @foreach (var modelPost in Model.Posts)
+        {
+            <div class="col-3 pe-0 ps-0 m-0">
+                <a asp-action="Details" asp-route-id="@modelPost.Id" asp-controller="Post">
+                    <img src="~/@modelPost.Image" width="240px" height="200px" alt="post_image">
+                </a>
+                <div class="d-flex justify-content-around bg-light py-3">
+                    <div>
+                        <a id="delete" onclick="deletePost('@modelPost.Id')"><i class="fa-solid fa-trash"></i></a>
+                    </div>
+                    <div>
+                        <a id="edit" onclick="EditPost('@modelPost.Id')"><i class="fa-solid fa-pen"></i></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        function deletePost(id){
+            $.ajax({
+                url: '@Url.Action("Delete", "Post")',
+                type: "POST",
+                data: {id: id},
+                success: function (){
+                    location.reload();
+                }
+            });
+        }
+                
+        function EditPost(id) {
+            window.location.href = '@Url.Action("EditPost", "Post")?id=' + id;
+        }
+    </script>
+}

@@ -1,0 +1,56 @@
+@model Instagram.ViewModels.PostVms.PostDetailsVm
+`
+@{
+    Layout = "_Layout";
+}
+
+<div class="card mb-3">
+    <div><a asp-action="OtherUserCabinet" 
+            asp-controller="User"
+            asp-route-id="@Model.UserId"><img src="~/@Model.User.Avatar" width="70px" height="70px" class="rounded-circle" alt="user_avatar"></a></div>
+    <img src="~/@Model.Image" class="card-img-top" alt="post_logo">
+    <div class="card-body">
+        <div class="d-flex">
+            <div class="me-2"><a id="subscribe" onclick="like('@Model.Id')">
+                @if (Model.Likes.Any(l => l.UserId == ViewBag.CurrentUser))
+                {
+                    <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                }
+                else
+                {
+                    <span class="text-dark"><i class="fa-regular fa-heart"></i></span>
+                }
+            </a></div>
+            <div><a href="#floatingTextarea" class="text-black"><i class="fa-regular fa-comment fa-flip-horizontal"></i></a></div>
+        </div>
+        <h5 class="card-title">@Model.Likes.Count @ViewData["Likes"]</h5>
+        @foreach (var comment in Model.Comments)
+        {
+            <div>@comment.User.UserName @comment.Text</div>
+        }
+        <p class="card-text">@Model.Description</p>
+        <form asp-action="Comment" asp-controller="User"
+              method="post" asp-route-postId="@Model.Id">
+            <div class="form-floating mb-3">
+                <div class="form-floating">
+                    <input class="form-control" name="commentText" placeholder=@ViewData["Add comment"] id="floatingTextarea">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        function like(id){
+            $.ajax({
+                url: '@Url.Action("Like", "User")',
+                type: "POST",
+                data: {postId: id},
+                success: function (){
+                    location.reload();
+                }
+            });
+        }
+    </script>
+}

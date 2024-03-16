@@ -1,0 +1,67 @@
+@model Instagram.ViewModels.UserVms.PersonalCabinetVm
+
+@{
+    ViewBag.Title = "Личный кабинет";
+    Layout = "_Layout";
+}
+
+<div class="container" style="width: 960px;">
+    <div class="row justify-content-around">
+        <div class="col-4">
+            <img class="rounded-circle" style="width: 200px; height: 200px;" src="~/@Model.Avatar" alt="avatar">
+        </div>
+        <div class="col-7 pt-4">
+            <div class="row">
+                <div class="col-4">
+                    <h2>@Model.UserName</h2>
+                </div>
+                <div class="col-8">
+                    <a id="subscribe" class="btn btn-outline-dark" onclick="subscribe('@Model.Id')">
+                         @if (Model.Subscribers.Any(u => u.Id == ViewBag.CurrentUser))
+                        {
+                            <span>@ViewData["Unsubscribe"]</span>
+                        }
+                        else
+                        {
+                            <span>@ViewData["Subscribe"]</span>
+                        }
+                    </a>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <div>@Model.Posts.Count :публикаций</div>
+                <div>@Model.Subscribers.Count :подписчиков</div>
+                <div>@Model.Subscribed.Count :подписки</div>
+            </div>
+            <div>
+                <h5>@Model.Name</h5>
+                <p>@Model.Info</p>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex mt-5">
+        @foreach (var modelPost in Model.Posts)
+        {
+            <div class="col-3 pe-0 ps-0 m-0">
+                <a asp-action="Details" asp-route-id="@modelPost.Id" asp-controller="Post">
+                    <img src="~/@modelPost.Image" alt="post_image">
+                </a>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        function subscribe(id){
+            $.ajax({
+                url: '@Url.Action("Subscribe", "User")',
+                type: "POST",
+                data: {id: id},
+                success: function (){
+                    location.reload();
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,30 @@
+@model Instagram.ViewModels.PostVms.EditVm
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-center">
+    <div class="card" style="width: 18rem;">
+        <div class="card-img-top text-center pt-3">
+            <img 
+                src="~/images/instagramLogo.png"
+                class="w-50 w-50"
+                alt="logo">
+        </div>
+        <div class="d-flex justify-content-center">
+            <form asp-action="EditPost" asp-antiforgery="true" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" value="@Model.Id"/>
+                <div class="form-group my-2">
+                    <input type="text" asp-for="Description" class="form-control" required
+                           placeholder=@ViewData["Description"]>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="text-center my-4">
+                    <button type="submit" class="fw-bold btn btn-info text-white">@ViewData["Edit"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
